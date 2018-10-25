@@ -103,7 +103,6 @@ impl<'a> Builder<'a> {
                 // height: 1080,
                 width: 0,
                 height: 0,
-                // pixelformat: V4L2_PIX_FMT_NV12,
                 pixelformat: 0,
                 // sizeimage: 3264 * 2448 * 3 / 2,
                 // sizeimage: 1920 * 1080 * 3 / 2,
@@ -158,6 +157,19 @@ impl<'a> Builder<'a> {
 
     pub fn open(self) -> io::Result<Capture> {
         let video = V4l2Device::open(self.path)?;
+
+        // Ensure pixel format supported for safety.
+        // VFE driver crashes if pixel format is not specified.
+        if video
+            .supported_formats(v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE)
+            .find(|fmtdesc| fmtdesc.pixelformat == self.format.pixelformat)
+            .is_none()
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::Other,
+                "unsupported pixel format",
+            ));
+        }
 
         if let Some(input) = self.input {
             video.set_input(input)?;
