@@ -69,17 +69,18 @@ impl Capture {
             .stream_off(v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE)
     }
 
-    pub fn with_default() -> Builder {
+    pub fn take_frame(&self) -> io::Result<v4l2_buffer> {
+    pub fn with_default<'a>() -> Builder<'a> {
         Builder::default()
     }
 
-    pub fn with_device(path: String) -> Builder {
+    pub fn with_device<'a>(path: &'a str) -> Builder<'a> {
         Builder::with_device(path)
     }
 }
 
-pub struct Builder {
-    path: String,
+pub struct Builder<'a> {
+    path: &'a str,
     input: Option<i32>,
     capturemode: u32,
     timeperframe: v4l2_fract,
@@ -87,8 +88,8 @@ pub struct Builder {
     _subch: Option<v4l2_pix_format>,
 }
 
-impl Builder {
-    pub fn with_device(path: String) -> Self {
+impl<'a> Builder<'a> {
+    pub fn with_device(path: &'a str) -> Self {
         Builder {
             path,
             input: None,
@@ -118,7 +119,7 @@ impl Builder {
         }
     }
 
-    pub fn device(mut self, path: String) -> Self {
+    pub fn device(mut self, path: &'a str) -> Self {
         self.path = path;
         self
     }
@@ -184,7 +185,7 @@ impl Builder {
     }
 }
 
-impl Builder {
+impl<'a> Builder<'a> {
     pub fn video_mode(mut self) -> Self {
         self.capturemode = V4L2_MODE_VIDEO;
         self
@@ -206,8 +207,8 @@ impl Builder {
     }
 }
 
-impl Default for Builder {
-    fn default() -> Builder {
-        Builder::with_device("/dev/video0".to_string())
+impl<'a> Default for Builder<'a> {
+    fn default() -> Builder<'a> {
+        Builder::with_device("/dev/video0")
     }
 }
