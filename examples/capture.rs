@@ -13,6 +13,9 @@ fn main() -> io::Result<()> {
         .open()?;
     println!("open");
 
+    // Get actual pixel format
+    let _pix_fmt = capture.pix_format()?;
+
     capture.prepare_mmapped(3)?;
     println!("prepare");
 

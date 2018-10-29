@@ -23,6 +23,11 @@ impl Capture {
         }
     }
 
+    /// Return current pixel format of capture device.
+    pub fn pix_format(&self) -> io::Result<v4l2_pix_format> {
+        self.device.capture_format()
+    }
+
     pub fn prepare_mmapped(&mut self, count: usize) -> io::Result<()> {
         // Request buffers
         let n = self.device.request_buffers(
