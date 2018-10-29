@@ -6,7 +6,6 @@ use std::ptr;
 
 use memmap::{MmapMut, MmapOptions};
 
-// use crate::sys::ioctl::pix_fmt::*;
 use crate::sys::ioctl::*;
 use crate::sys::V4l2Device;
 

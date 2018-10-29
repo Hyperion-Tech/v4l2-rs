@@ -2,7 +2,7 @@ extern crate v4l2;
 
 use std::io;
 
-use v4l2::sys::ioctl::pix_fmt::V4L2_PIX_FMT_NV12;
+use v4l2::sys::ioctl::V4L2_PIX_FMT_NV12;
 use v4l2::Capture;
 
 fn main() -> io::Result<()> {

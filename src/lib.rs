@@ -8,8 +8,6 @@ pub mod sys {
     pub use self::device::V4l2Device;
 }
 
-// pub mod pixfmt;
-
 mod capture;
 
 pub use self::capture::Capture;

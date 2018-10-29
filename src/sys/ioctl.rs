@@ -9,12 +9,6 @@ use nix::sys::ioctl::ioctl_num_type;
 
 pub const VIDEO_MAX_PLANES: usize = 8;
 
-macro_rules! v4l2_fourcc {
-    ( $a:expr, $b:expr, $c:expr, $d:expr ) => {
-        ($a as u32) | (($b as u32) << 8) | (($c as u32) << 16) | (($d as u32) << 24)
-    };
-}
-
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_field {
@@ -110,30 +104,34 @@ pub struct v4l2_pix_format {
     pub subchannel: *mut v4l2_pix_format,
 }
 
-pub mod pix_fmt {
-    pub const V4L2_PIX_FMT_YVU420: u32 = v4l2_fourcc!('Y', 'V', '1', '2'); /* 12  YVU 4:2:0     */
-    pub const V4L2_PIX_FMT_YUV420: u32 = v4l2_fourcc!('Y', 'U', '1', '2'); /* 12  YUV 4:2:0     */
-    pub const V4L2_PIX_FMT_YUYV: u32 = v4l2_fourcc!('Y', 'U', 'Y', 'V'); /* 16  YUV 4:2:2     */
-    pub const V4L2_PIX_FMT_NV12: u32 = v4l2_fourcc!('N', 'V', '1', '2'); /* 12  Y/CbCr 4:2:0  */
-    pub const V4L2_PIX_FMT_NV21: u32 = v4l2_fourcc!('N', 'V', '2', '1'); /* 12  Y/CrCb 4:2:0  */
-
-    // /* compressed formats */
-    pub const V4L2_PIX_FMT_MJPEG: u32 = v4l2_fourcc!('M', 'J', 'P', 'G'); /* Motion-JPEG   */
-    pub const V4L2_PIX_FMT_JPEG: u32 = v4l2_fourcc!('J', 'P', 'E', 'G'); /* JFIF JPEG     */
-    // #define V4L2_PIX_FMT_DV       v4l2_fourcc('d', 'v', 's', 'd') /* 1394          */
-    // #define V4L2_PIX_FMT_MPEG     v4l2_fourcc('M', 'P', 'E', 'G') /* MPEG-1/2/4 Multiplexed */
-    pub const V4L2_PIX_FMT_H264: u32 = v4l2_fourcc!('H', '2', '6', '4'); /* H264 with start codes */
-    pub const V4L2_PIX_FMT_H264_NO_SC: u32 = v4l2_fourcc!('A', 'V', 'C', '1'); /* H264 without start codes */
-    // #define V4L2_PIX_FMT_H264_MVC v4l2_fourcc('M', '2', '6', '4') /* H264 MVC */
-    // #define V4L2_PIX_FMT_H263     v4l2_fourcc('H', '2', '6', '3') /* H263          */
-    // #define V4L2_PIX_FMT_MPEG1    v4l2_fourcc('M', 'P', 'G', '1') /* MPEG-1 ES     */
-    pub const V4L2_PIX_FMT_MPEG2: u32 = v4l2_fourcc!('M', 'P', 'G', '2'); /* MPEG-2 ES     */
-    // #define V4L2_PIX_FMT_MPEG4    v4l2_fourcc('M', 'P', 'G', '4') /* MPEG-4 part 2 ES */
-    // #define V4L2_PIX_FMT_XVID     v4l2_fourcc('X', 'V', 'I', 'D') /* Xvid           */
-    // #define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G') /* SMPTE 421M Annex G compliant stream */
-    // #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /* SMPTE 421M Annex L compliant stream */
-    pub const V4L2_PIX_FMT_VP8: u32 = v4l2_fourcc!('V', 'P', '8', '0'); /* VP8 */
+macro_rules! v4l2_fourcc {
+    ( $a:expr, $b:expr, $c:expr, $d:expr ) => {
+        ($a as u32) | (($b as u32) << 8) | (($c as u32) << 16) | (($d as u32) << 24)
+    };
 }
+
+pub const V4L2_PIX_FMT_YVU420: u32 = v4l2_fourcc!('Y', 'V', '1', '2'); /* 12  YVU 4:2:0     */
+pub const V4L2_PIX_FMT_YUV420: u32 = v4l2_fourcc!('Y', 'U', '1', '2'); /* 12  YUV 4:2:0     */
+pub const V4L2_PIX_FMT_YUYV: u32 = v4l2_fourcc!('Y', 'U', 'Y', 'V'); /* 16  YUV 4:2:2     */
+pub const V4L2_PIX_FMT_NV12: u32 = v4l2_fourcc!('N', 'V', '1', '2'); /* 12  Y/CbCr 4:2:0  */
+pub const V4L2_PIX_FMT_NV21: u32 = v4l2_fourcc!('N', 'V', '2', '1'); /* 12  Y/CrCb 4:2:0  */
+
+// /* compressed formats */
+pub const V4L2_PIX_FMT_MJPEG: u32 = v4l2_fourcc!('M', 'J', 'P', 'G'); /* Motion-JPEG   */
+pub const V4L2_PIX_FMT_JPEG: u32 = v4l2_fourcc!('J', 'P', 'E', 'G'); /* JFIF JPEG     */
+// #define V4L2_PIX_FMT_DV       v4l2_fourcc('d', 'v', 's', 'd') /* 1394          */
+// #define V4L2_PIX_FMT_MPEG     v4l2_fourcc('M', 'P', 'E', 'G') /* MPEG-1/2/4 Multiplexed */
+pub const V4L2_PIX_FMT_H264: u32 = v4l2_fourcc!('H', '2', '6', '4'); /* H264 with start codes */
+pub const V4L2_PIX_FMT_H264_NO_SC: u32 = v4l2_fourcc!('A', 'V', 'C', '1'); /* H264 without start codes */
+// #define V4L2_PIX_FMT_H264_MVC v4l2_fourcc('M', '2', '6', '4') /* H264 MVC */
+// #define V4L2_PIX_FMT_H263     v4l2_fourcc('H', '2', '6', '3') /* H263          */
+// #define V4L2_PIX_FMT_MPEG1    v4l2_fourcc('M', 'P', 'G', '1') /* MPEG-1 ES     */
+pub const V4L2_PIX_FMT_MPEG2: u32 = v4l2_fourcc!('M', 'P', 'G', '2'); /* MPEG-2 ES     */
+// #define V4L2_PIX_FMT_MPEG4    v4l2_fourcc('M', 'P', 'G', '4') /* MPEG-4 part 2 ES */
+// #define V4L2_PIX_FMT_XVID     v4l2_fourcc('X', 'V', 'I', 'D') /* Xvid           */
+// #define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G') /* SMPTE 421M Annex G compliant stream */
+// #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /* SMPTE 421M Annex L compliant stream */
+pub const V4L2_PIX_FMT_VP8: u32 = v4l2_fourcc!('V', 'P', '8', '0'); /* VP8 */
 
 #[repr(C)]
 #[derive(Clone)]
