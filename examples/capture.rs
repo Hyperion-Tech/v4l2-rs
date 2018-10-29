@@ -2,8 +2,8 @@ extern crate v4l2;
 
 use std::io;
 
-use v4l2::Capture;
 use v4l2::sys::ioctl::pix_fmt::V4L2_PIX_FMT_NV12;
+use v4l2::Capture;
 
 fn main() -> io::Result<()> {
     let mut capture = Capture::with_device("/dev/video0")
@@ -18,6 +18,15 @@ fn main() -> io::Result<()> {
 
     capture.start()?;
     println!("start");
+
+    while let Ok(buf) = capture.take_frame() {
+        println!(
+            "used {} flags {:08x} field {:?} seq {} length {} input {} t {}/{}",
+            buf.bytesused, buf.flags, buf.field, buf.sequence, buf.length, buf.input,
+            buf.timestamp.tv_sec, buf.timestamp.tv_usec
+        );
+        capture.return_frame(&buf)?;
+    }
 
     capture.stop()?;
     println!("stop");

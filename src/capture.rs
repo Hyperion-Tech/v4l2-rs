@@ -70,6 +70,18 @@ impl Capture {
     }
 
     pub fn take_frame(&self) -> io::Result<v4l2_buffer> {
+        let buf = self.device.dequeue_buffer(
+            v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE,
+            v4l2_memory::V4L2_MEMORY_MMAP,
+        )?;
+
+        Ok(buf)
+    }
+
+    pub fn return_frame(&self, buf: &v4l2_buffer) -> io::Result<()> {
+        self.device.queue_buffer(buf)
+    }
+
     pub fn with_default<'a>() -> Builder<'a> {
         Builder::default()
     }
