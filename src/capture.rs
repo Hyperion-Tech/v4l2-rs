@@ -1,15 +1,18 @@
+use std::fs::File;
 use std::io;
 use std::mem;
+use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::ptr;
+
+use memmap::{MmapMut, MmapOptions};
 
 // use crate::sys::ioctl::pix_fmt::*;
 use crate::sys::ioctl::*;
 use crate::sys::V4l2Device;
-use crate::MappedBuffer;
 
 pub struct Capture {
     device: V4l2Device,
-    buffers: Vec<MappedBuffer>,
+    buffers: Vec<MmapMut>,
 }
 
 impl Capture {
@@ -30,14 +33,24 @@ impl Capture {
 
         self.buffers.clear();
 
+        let f = unsafe { File::from_raw_fd(self.device.as_raw_fd()) };
+
         for buf in self.device.buffers(
             v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE,
             v4l2_memory::V4L2_MEMORY_MMAP,
         ) {
-            if let Ok(buffer) = MappedBuffer::new(&self.device, &buf) {
-                self.buffers.push(buffer);
+            let mmap = unsafe {
+                MmapOptions::new()
+                    .len(buf.length as usize)
+                    .offset(buf.m.offset as u64)
+                    .map_mut(&f)
+            };
+            if let Ok(mmap) = mmap {
+                self.buffers.push(mmap);
             }
         }
+        mem::forget(f);
+
         if self.buffers.len() != n {}
 
         Ok(())

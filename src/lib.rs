@@ -10,10 +10,6 @@ pub mod sys {
 
 // pub mod pixfmt;
 
-mod buffer;
-
-use self::buffer::MappedBuffer;
-
 mod capture;
 
 pub use self::capture::Capture;
