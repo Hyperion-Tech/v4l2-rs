@@ -87,13 +87,15 @@ impl Capture {
             .stream_off(v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE)
     }
 
-    pub fn take_frame(&self) -> io::Result<v4l2_buffer> {
+    pub fn take_frame(&mut self) -> io::Result<(v4l2_buffer, &mut MmapMut)> {
         let buf = self.device.dequeue_buffer(
             v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE,
             v4l2_memory::V4L2_MEMORY_MMAP,
         )?;
 
-        Ok(buf)
+        let mmap = &mut self.buffers[buf.index as usize];
+
+        Ok((buf, mmap))
     }
 
     pub fn return_frame(&self, buf: &v4l2_buffer) -> io::Result<()> {

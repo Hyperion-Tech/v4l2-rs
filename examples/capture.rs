@@ -22,7 +22,7 @@ fn main() -> io::Result<()> {
     capture.start()?;
     println!("start");
 
-    while let Ok(buf) = capture.take_frame() {
+    while let Ok((buf, _mmap)) = capture.take_frame() {
         println!(
             "used {} flags {:08x} field {:?} seq {} length {} input {} t {}/{}",
             buf.bytesused, buf.flags, buf.field, buf.sequence, buf.length, buf.input,
