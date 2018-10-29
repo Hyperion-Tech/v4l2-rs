@@ -48,16 +48,16 @@ impl Capture {
     }
 
     pub fn start(&self) -> io::Result<()> {
-        let mut capbuf: v4l2_buffer = unsafe { mem::zeroed() };
+        let mut buf: v4l2_buffer = unsafe { mem::zeroed() };
 
-        capbuf.typ = v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        capbuf.memory = v4l2_memory::V4L2_MEMORY_MMAP;
+        buf.typ = v4l2_buf_type::V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory = v4l2_memory::V4L2_MEMORY_MMAP;
 
         // Queue buffers
         for i in 0..self.buffers.len() {
-            capbuf.index = i as u32;
+            buf.index = i as u32;
 
-            self.device.queue_buffer(&capbuf)?;
+            self.device.queue_buffer(&buf)?;
         }
 
         self.device
@@ -111,13 +111,9 @@ impl<'a> Builder<'a> {
                 denominator: 30,
             },
             format: v4l2_pix_format {
-                // width: 1920,
-                // height: 1080,
                 width: 0,
                 height: 0,
                 pixelformat: 0,
-                // sizeimage: 3264 * 2448 * 3 / 2,
-                // sizeimage: 1920 * 1080 * 3 / 2,
                 sizeimage: 0,
                 field: v4l2_field::V4L2_FIELD_ANY,
                 bytesperline: 0,

@@ -492,7 +492,7 @@ pub const VIDIOC_SUBSCRIBE_EVENT: ioctl_num_type =
 mod sunxi {
     pub const V4L2_MODE_VIDEO: u32 = 0x0002; /*  Added by raymonxiu For video capture */
     pub const V4L2_MODE_IMAGE: u32 = 0x0003; /*  Added by raymonxiu For image capture */
-    pub const V4L2_MODE_PREVIEW: u32 = 0x0004;  /*  Added by raymonxiu For preview capture */
+    pub const V4L2_MODE_PREVIEW: u32 = 0x0004; /*  Added by raymonxiu For preview capture */
 }
 
 pub use self::sunxi::*;
