@@ -16,7 +16,7 @@ macro_rules! v4l2_fourcc {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_field {
     V4L2_FIELD_ANY = 0,
     V4L2_FIELD_NONE = 1,
@@ -31,7 +31,7 @@ pub enum v4l2_field {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_memory {
     V4L2_MEMORY_MMAP = 1,
     V4L2_MEMORY_USERPTR = 2,
@@ -39,7 +39,7 @@ pub enum v4l2_memory {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_colorspace {
     V4L2_COLORSPACE_SMPTE170M = 1,
     V4L2_COLORSPACE_SMPTE240M = 2,
@@ -52,7 +52,7 @@ pub enum v4l2_colorspace {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_buf_type {
     V4L2_BUF_TYPE_VIDEO_CAPTURE = 1,
     V4L2_BUF_TYPE_VIDEO_OUTPUT = 2,
@@ -147,6 +147,7 @@ pub struct v4l2_fmtdesc {
 }
 
 #[repr(u32)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum v4l2_frmsizetypes {
     V4L2_FRMSIZE_TYPE_DISCRETE = 1,
     V4L2_FRMSIZE_TYPE_CONTINUOUS = 2,
