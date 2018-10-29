@@ -117,7 +117,7 @@ impl<'a> Builder<'a> {
                 sizeimage: 0,
                 field: v4l2_field::V4L2_FIELD_ANY,
                 bytesperline: 0,
-                colorspace: v4l2_colorspace::V4L2_COLORSPACE_SRGB,
+                colorspace: v4l2_colorspace::V4L2_COLORSPACE_JPEG,
                 private: 0,
                 rot_angle: 0,
                 subchannel: ptr::null_mut(),
