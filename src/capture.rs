@@ -2,7 +2,6 @@ use std::fs::File;
 use std::io;
 use std::mem;
 use std::os::unix::io::{AsRawFd, FromRawFd};
-use std::ptr;
 
 use memmap::{MmapMut, MmapOptions};
 
@@ -116,11 +115,15 @@ pub struct Builder<'a> {
     capturemode: u32,
     timeperframe: v4l2_fract,
     format: v4l2_pix_format,
+    #[cfg(feature = "sunxi-vfe")]
     _subch: Option<v4l2_pix_format>,
 }
 
 impl<'a> Builder<'a> {
     pub fn with_device(path: &'a str) -> Self {
+        #[cfg(feature = "sunxi-vfe")]
+        use std::ptr;
+
         Builder {
             path,
             input: None,
@@ -129,6 +132,18 @@ impl<'a> Builder<'a> {
                 numerator: 1,
                 denominator: 30,
             },
+            #[cfg(not(feature = "sunxi-vfe"))]
+            format: v4l2_pix_format {
+                width: 0,
+                height: 0,
+                pixelformat: 0,
+                sizeimage: 0,
+                field: v4l2_field::V4L2_FIELD_ANY,
+                bytesperline: 0,
+                colorspace: v4l2_colorspace::V4L2_COLORSPACE_JPEG,
+                private: 0,
+            },
+            #[cfg(feature = "sunxi-vfe")]
             format: v4l2_pix_format {
                 width: 0,
                 height: 0,
@@ -141,6 +156,7 @@ impl<'a> Builder<'a> {
                 rot_angle: 0,
                 subchannel: ptr::null_mut(),
             },
+            #[cfg(feature = "sunxi-vfe")]
             _subch: None,
         }
     }
@@ -224,6 +240,7 @@ impl<'a> Builder<'a> {
     }
 }
 
+#[cfg(feature = "sunxi-vfe")]
 impl<'a> Builder<'a> {
     pub fn video_mode(mut self) -> Self {
         self.capturemode = V4L2_MODE_VIDEO;

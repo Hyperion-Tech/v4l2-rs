@@ -89,6 +89,21 @@ pub struct v4l2_capability {
     reserved: [u32; 3],
 }
 
+#[cfg(not(feature = "sunxi-vfe"))]
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct v4l2_pix_format {
+    pub width: u32,
+    pub height: u32,
+    pub pixelformat: u32,
+    pub field: v4l2_field,
+    pub bytesperline: u32,
+    pub sizeimage: u32,
+    pub colorspace: v4l2_colorspace,
+    pub private: u32,
+}
+
+#[cfg(feature = "sunxi-vfe")]
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct v4l2_pix_format {
@@ -488,10 +503,12 @@ pub const VIDIOC_DQEVENT: ioctl_num_type =
 pub const VIDIOC_SUBSCRIBE_EVENT: ioctl_num_type =
     request_code_write!(b'V', 90, mem::size_of::<v4l2_event_subscription>());
 
-mod sunxi {
+#[cfg(feature = "sunxi-vfe")]
+mod sunxi_vfe {
     pub const V4L2_MODE_VIDEO: u32 = 0x0002; /*  Added by raymonxiu For video capture */
     pub const V4L2_MODE_IMAGE: u32 = 0x0003; /*  Added by raymonxiu For image capture */
     pub const V4L2_MODE_PREVIEW: u32 = 0x0004; /*  Added by raymonxiu For preview capture */
 }
 
-pub use self::sunxi::*;
+#[cfg(feature = "sunxi-vfe")]
+pub use self::sunxi_vfe::*;
