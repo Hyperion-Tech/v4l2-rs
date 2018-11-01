@@ -3,7 +3,7 @@ extern crate nix;
 
 pub mod sys {
     mod device;
-    pub mod ioctl;
+    pub mod uapi;
 
     pub use self::device::V4l2Device;
 }

@@ -5,7 +5,7 @@ use std::os::unix::io::{AsRawFd, FromRawFd};
 
 use memmap::{MmapMut, MmapOptions};
 
-use crate::sys::ioctl::*;
+use crate::sys::uapi::*;
 use crate::sys::V4l2Device;
 
 pub struct Capture {

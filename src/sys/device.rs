@@ -7,7 +7,7 @@ use std::path::Path;
 
 use libc;
 
-use super::ioctl::*;
+use super::uapi::*;
 
 fn cvt(i: libc::c_int) -> io::Result<libc::c_int> {
     if i == -1 {
